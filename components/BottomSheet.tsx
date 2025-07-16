@@ -8,6 +8,7 @@ import {
   Animated,
   Dimensions,
   Platform,
+  ScrollView,
 } from 'react-native';
 import { X } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -118,39 +119,45 @@ export default function BottomSheet({ visible, onClose, title, actions }: Bottom
           )}
 
           {/* Actions */}
-          <View style={styles.actionsContainer}>
-            {actions.map((action, index) => {
-              const IconComponent = action.icon;
-              return (
-                <TouchableOpacity
-                  key={action.id}
-                  style={[
-                    styles.actionButton,
-                    index === actions.length - 1 && styles.lastActionButton,
-                  ]}
-                  onPress={() => handleActionPress(action)}
-                  activeOpacity={0.7}
-                >
-                  {IconComponent && (
-                    <View style={styles.actionIconContainer}>
-                      <IconComponent
-                        size={20}
-                        color={action.color || colors.text}
-                      />
-                    </View>
-                  )}
-                  <Text
+          <ScrollView 
+            style={styles.actionsContainer}
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+          >
+            <View style={styles.actionsContent}>
+              {actions.map((action, index) => {
+                const IconComponent = action.icon;
+                return (
+                  <TouchableOpacity
+                    key={action.id}
                     style={[
-                      styles.actionText,
-                      { color: action.color || colors.text },
+                      styles.actionButton,
+                      index === actions.length - 1 && styles.lastActionButton,
                     ]}
+                    onPress={() => handleActionPress(action)}
+                    activeOpacity={0.7}
                   >
-                    {action.title}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+                    {IconComponent && (
+                      <View style={styles.actionIconContainer}>
+                        <IconComponent
+                          size={20}
+                          color={action.color || colors.text}
+                        />
+                      </View>
+                    )}
+                    <Text
+                      style={[
+                        styles.actionText,
+                        { color: action.color || colors.text },
+                      ]}
+                    >
+                      {action.title}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </ScrollView>
 
           {/* Safe area padding for devices with home indicator */}
           <View style={styles.safeAreaPadding} />
@@ -215,6 +222,10 @@ const createStyles = (colors: any) => StyleSheet.create({
     alignItems: 'center',
   },
   actionsContainer: {
+    flex: 1,
+    maxHeight: screenHeight * 0.4, // Limit height to 40% of screen
+  },
+  actionsContent: {
     paddingHorizontal: 20,
     paddingTop: 16,
   },

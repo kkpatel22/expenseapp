@@ -260,7 +260,7 @@ export default function Family() {
             <View style={styles.budgetStatItem}>
               <TrendingUp size={24} color="#4facfe" />
               <Text style={styles.budgetStatValue}>
-                {formatCurrency(familyGroup.budget.monthly - familyGroup.budget.spent)}
+                {formatAmount(familyGroup.budget.monthly - familyGroup.budget.spent, userCurrency)}
               </Text>
               <Text style={styles.budgetStatLabel}>Remaining</Text>
             </View>
@@ -305,7 +305,7 @@ export default function Family() {
                       styles.categoryAmount,
                       { color: isOverBudget ? '#EF4444' : colors.text }
                     ]}>
-                      {formatCurrency(category.spent)} / {formatCurrency(category.budget)}
+                      {formatAmount(category.spent, userCurrency)} / {formatAmount(category.budget, userCurrency)}
                     </Text>
                   </View>
                   <View style={styles.categoryProgressBar}>

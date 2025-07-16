@@ -307,9 +307,6 @@ export default function Family() {
                     ]}>
                       {formatCurrency(category.spent)} / {formatCurrency(category.budget)}
                     </Text>
-                    ]}>
-                      {formatAmount(category.spent, userCurrency)} / {formatAmount(category.budget, userCurrency)}
-                    </Text>
                   </View>
                   <View style={styles.categoryProgressBar}>
                     <View 

@@ -9,9 +9,11 @@ import {
   Dimensions,
   Platform,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import { X } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface BottomSheetAction {
   id: string;
@@ -33,6 +35,7 @@ const { height: screenHeight } = Dimensions.get('window');
 export default function BottomSheet({ visible, onClose, title, actions }: BottomSheetProps) {
   const { state: themeState } = useTheme();
   const { colors } = themeState.theme;
+  const insets = useSafeAreaInsets();
   const styles = createStyles(colors);
 
   const translateY = useRef(new Animated.Value(screenHeight)).current;
@@ -86,8 +89,10 @@ export default function BottomSheet({ visible, onClose, title, actions }: Bottom
       transparent={true}
       animationType="none"
       onRequestClose={onClose}
-      statusBarTranslucent={true}
+      statusBarTranslucent={Platform.OS === 'android'}
+      presentationStyle={Platform.OS === 'ios' ? 'overFullScreen' : 'fullScreen'}
     >
+      {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
       <View style={styles.overlay}>
         <Animated.View style={[styles.backdrop, { opacity }]}>
           <TouchableOpacity
@@ -102,6 +107,7 @@ export default function BottomSheet({ visible, onClose, title, actions }: Bottom
             styles.bottomSheet,
             {
               transform: [{ translateY }],
+              paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 20) : 20,
             },
           ]}
         >
@@ -120,7 +126,9 @@ export default function BottomSheet({ visible, onClose, title, actions }: Bottom
 
           {/* Actions */}
           <ScrollView 
-            style={styles.actionsContainer}
+            style={[styles.actionsContainer, {
+              maxHeight: screenHeight * 0.5 - (Platform.OS === 'ios' ? insets.bottom + 100 : 100)
+            }]}
             showsVerticalScrollIndicator={false}
             bounces={false}
           >
@@ -158,9 +166,6 @@ export default function BottomSheet({ visible, onClose, title, actions }: Bottom
               })}
             </View>
           </ScrollView>
-
-          {/* Safe area padding for devices with home indicator */}
-          <View style={styles.safeAreaPadding} />
         </Animated.View>
       </View>
     </Modal>
@@ -184,7 +189,7 @@ const createStyles = (colors: any) => StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 8,
-    maxHeight: screenHeight * 0.6,
+    maxHeight: screenHeight * 0.7,
     shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.1,
@@ -222,12 +227,12 @@ const createStyles = (colors: any) => StyleSheet.create({
     alignItems: 'center',
   },
   actionsContainer: {
-    flex: 1,
-    maxHeight: screenHeight * 0.4, // Limit height to 40% of screen
+    flexGrow: 1,
   },
   actionsContent: {
     paddingHorizontal: 20,
     paddingTop: 16,
+    paddingBottom: 20,
   },
   actionButton: {
     flexDirection: 'row',
@@ -252,8 +257,5 @@ const createStyles = (colors: any) => StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     flex: 1,
-  },
-  safeAreaPadding: {
-    height: Platform.OS === 'ios' ? 34 : 20,
   },
 });

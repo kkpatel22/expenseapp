@@ -22,7 +22,6 @@ interface SubscriptionPlan {
   originalPrice?: number;
   discount?: number;
   popular?: boolean;
-  features: string[];
   badge?: string;
 }
 
@@ -35,19 +34,28 @@ export default function Subscription() {
 
   const [selectedPlan, setSelectedPlan] = useState<string>('3-month');
 
+  // Common features for all plans
+  const commonFeatures = [
+    'Unlimited transactions',
+    'Advanced analytics & insights',
+    'Family budget sharing',
+    'Data backup & sync',
+    'Custom categories',
+    'Export data (CSV, PDF)',
+    'Goal tracking',
+    'Investment tracking',
+    'EMI management',
+    'Priority customer support',
+    'Ad-free experience',
+    'Multi-device sync'
+  ];
+
   const subscriptionPlans: SubscriptionPlan[] = [
     {
       id: '1-month',
       duration: '1 Month',
       months: 1,
       price: 129,
-      features: [
-        'Unlimited transactions',
-        'Advanced analytics',
-        'Family budget sharing',
-        'Priority support',
-        'Data backup & sync'
-      ]
     },
     {
       id: '3-month',
@@ -58,13 +66,6 @@ export default function Subscription() {
       discount: 5,
       popular: true,
       badge: 'Most Popular',
-      features: [
-        'Everything in 1 Month',
-        'Advanced reporting',
-        'Custom categories',
-        'Export data',
-        '5% savings'
-      ]
     },
     {
       id: '6-month',
@@ -74,13 +75,6 @@ export default function Subscription() {
       originalPrice: 774, // 129 * 6
       discount: 10,
       badge: 'Best Value',
-      features: [
-        'Everything in 3 Months',
-        'Premium insights',
-        'Goal tracking',
-        'Investment tracking',
-        '10% savings'
-      ]
     },
     {
       id: '12-month',
@@ -90,13 +84,6 @@ export default function Subscription() {
       originalPrice: 1548, // 129 * 12
       discount: 30,
       badge: 'Maximum Savings',
-      features: [
-        'Everything in 6 Months',
-        'AI-powered insights',
-        'Tax planning tools',
-        'Premium support',
-        '30% savings'
-      ]
     }
   ];
 
@@ -217,12 +204,12 @@ export default function Subscription() {
 
                 {/* Features */}
                 <View style={styles.featuresContainer}>
-                  {plan.features.map((feature, index) => (
+                  {commonFeatures.map((feature, index) => (
                     <View key={index} style={styles.featureItem}>
-                      <View style={[styles.featureIcon, isSelected && styles.featureIconSelected]}>
-                        <Check size={12} color={isSelected ? "#FFFFFF" : "#4facfe"} />
+                      <View style={styles.featureIcon}>
+                        <Check size={12} color="#4facfe" />
                       </View>
-                      <Text style={[styles.featureText, isSelected && styles.featureTextSelected]}>
+                      <Text style={styles.featureText}>
                         {feature}
                       </Text>
                     </View>
@@ -379,36 +366,46 @@ const createStyles = (colors: any) => StyleSheet.create({
   },
   planCard: {
     backgroundColor: colors.surface,
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: 24,
+    padding: 28,
     borderWidth: 2,
     borderColor: colors.border,
     position: 'relative',
     shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 8,
+    marginHorizontal: 2,
   },
   planCardSelected: {
     borderColor: '#4facfe',
     backgroundColor: colors.primaryLight,
-    transform: [{ scale: 1.02 }],
+    transform: [{ scale: 1.03 }],
+    shadowColor: '#4facfe',
+    shadowOpacity: 0.25,
   },
   planCardPopular: {
     borderColor: '#4facfe',
+    shadowColor: '#4facfe',
+    shadowOpacity: 0.2,
   },
   planBadge: {
     position: 'absolute',
-    top: -8,
-    left: 20,
+    top: -10,
+    left: 24,
     backgroundColor: '#6B7280',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 16,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   planBadgePopular: {
     backgroundColor: '#4facfe',
@@ -419,31 +416,37 @@ const createStyles = (colors: any) => StyleSheet.create({
     color: '#FFFFFF',
   },
   planHeader: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   planTitleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   planDuration: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 26,
+    fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.5,
   },
   planDurationSelected: {
     color: '#4facfe',
   },
   discountBadge: {
     backgroundColor: '#EF4444',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    shadowColor: '#EF4444',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
   },
   discountText: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '700',
     color: '#FFFFFF',
   },
   planPricing: {
@@ -452,68 +455,71 @@ const createStyles = (colors: any) => StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 4,
+    gap: 12,
+    marginBottom: 6,
   },
   planPrice: {
-    fontSize: 32,
-    fontWeight: '700',
+    fontSize: 36,
+    fontWeight: '800',
     color: colors.text,
+    letterSpacing: -1,
   },
   planPriceSelected: {
     color: '#4facfe',
   },
   originalPrice: {
-    fontSize: 18,
+    fontSize: 20,
     color: colors.textTertiary,
     textDecorationLine: 'line-through',
-  },
-  monthlyPrice: {
-    fontSize: 14,
-    color: colors.textTertiary,
     fontWeight: '500',
   },
+  monthlyPrice: {
+    fontSize: 15,
+    color: colors.textTertiary,
+    fontWeight: '600',
+  },
   featuresContainer: {
-    gap: 12,
+    gap: 14,
   },
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 14,
   },
   featureIcon: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#EFF6FF',
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#E0F2FE',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  featureIconSelected: {
-    backgroundColor: '#4facfe',
+    borderWidth: 1,
+    borderColor: '#BAE6FD',
   },
   featureText: {
-    fontSize: 14,
+    fontSize: 15,
     color: colors.textSecondary,
-    fontWeight: '500',
-    flex: 1,
-  },
-  featureTextSelected: {
-    color: colors.text,
     fontWeight: '600',
+    flex: 1,
+    lineHeight: 20,
   },
   selectedIndicator: {
     position: 'absolute',
-    top: 20,
-    right: 20,
+    top: 24,
+    right: 24,
   },
   selectedIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: '#4facfe',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#4facfe',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 6,
   },
   benefitsSection: {
     padding: 20,

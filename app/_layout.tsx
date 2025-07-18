@@ -31,13 +31,12 @@ function RootLayoutContent() {
     if (!isCheckingOnboarding && !authState.isLoading) {
       if (!onboardingComplete) {
         router.replace('/(onboarding)/splash');
-      } else if (!authState.isAuthenticated) {
-        router.replace('/(auth)/mobile-entry');
       } else {
+        // For returning users, go directly to tabs (guest mode is handled by AuthGuard)
         router.replace('/(tabs)');
       }
     }
-  }, [isCheckingOnboarding, onboardingComplete, authState.isAuthenticated, authState.isLoading]);
+  }, [isCheckingOnboarding, onboardingComplete, authState.isLoading]);
 
   const checkOnboardingStatus = async () => {
     try {

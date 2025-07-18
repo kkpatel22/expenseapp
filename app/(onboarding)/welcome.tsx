@@ -64,10 +64,10 @@ export default function Welcome() {
   const markOnboardingComplete = async () => {
     try {
       await AsyncStorage.setItem('onboardingComplete', 'true');
-      router.replace('/(auth)/mobile-entry');
+      router.replace('/(tabs)');
     } catch (error) {
       console.error('Error marking onboarding complete:', error);
-      router.replace('/(auth)/mobile-entry');
+      router.replace('/(tabs)');
     }
   };
 

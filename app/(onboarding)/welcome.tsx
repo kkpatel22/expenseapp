@@ -18,7 +18,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Sparkles, TrendingUp, Users, Shield, ArrowRight, PiggyBank, BarChart3 } from 'lucide-react-native';
+import { Sparkles, TrendingUp, Users, Shield, ArrowRight, PiggyBank, ChartBar as BarChart3 } from 'lucide-react-native';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
